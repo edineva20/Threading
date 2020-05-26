@@ -1,7 +1,5 @@
 package de.processes;
 
-import de.threads.DaemonTreads;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,11 +7,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BlockingProcessStart {
-    private  static final Logger LOGGER = Logger.getLogger(BlockingProcessStart.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(BlockingProcessStart.class.getName());
 
     public static void main(String[] args) {
 
-        if(args.length == 0) {
+        if (args.length == 0) {
             LOGGER.log(Level.WARNING, "no command line given to call");
             System.exit(1);
         }

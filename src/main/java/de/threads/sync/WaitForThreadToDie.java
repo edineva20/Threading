@@ -1,13 +1,14 @@
-package de.threads;
+package de.threads.sync;
+
+import de.threads.RandomRunner;
 
 import java.util.HashMap;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WaitForThreadToDie {
 
-    private  static final Logger LOGGER = Logger.getLogger(WaitForThreadToDie.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(WaitForThreadToDie.class.getName());
 
     public static void main(String[] args) throws InterruptedException {
         HashMap<String, Thread> threads = new HashMap<>();
@@ -22,7 +23,7 @@ public class WaitForThreadToDie {
         }
 
         LOGGER.log(Level.WARNING, "waiting for threads to die");
-        for (String name: threads.keySet()) {
+        for (String name : threads.keySet()) {
             Thread t = threads.get(name);
             t.join();
             LOGGER.log(Level.WARNING, "Thread {0} died", t.getName());

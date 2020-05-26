@@ -4,11 +4,11 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class RandomRunner implements  Runnable {
+public class RandomRunner implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger(RandomRunner.class.getName());
     private boolean running = true;
-    private  static final Logger LOGGER = Logger.getLogger(RandomRunner.class.getName());
-
     private int maximumLoops = -1;
+
     public RandomRunner(int maximumLoops) {
         this.maximumLoops = maximumLoops;
     }
@@ -34,7 +34,7 @@ class RandomRunner implements  Runnable {
     @Override
     public void run() {
         Random randomSleep = new Random();
-        while(running && maximumLoops != 0) {
+        while (running && maximumLoops != 0) {
             if (maximumLoops > 0) {
                 --maximumLoops;
                 try {

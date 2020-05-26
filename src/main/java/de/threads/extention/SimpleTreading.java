@@ -1,11 +1,13 @@
-package de.threads;
+package de.threads.extention;
+
+import de.threads.RandomRunner;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class SimpleTreading {
 
-    private  static final Logger LOGGER = Logger.getLogger(SimpleTreading.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SimpleTreading.class.getName());
 
     public static void main(String[] args) throws InterruptedException {
         HashMap<String, RandomRunner> runnables = new HashMap<>();
@@ -17,7 +19,7 @@ public class SimpleTreading {
             t.start();
         }
         Thread.sleep(2000);
-        for (String name: runnables.keySet()) {
+        for (String name : runnables.keySet()) {
             RandomRunner t = runnables.get(name);
             t.stop();
         }

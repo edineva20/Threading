@@ -1,13 +1,13 @@
-package de.threads;
+package de.threads.daemon;
+
+import de.threads.RandomRunner;
 
 import java.util.HashMap;
-import java.util.Random;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DaemonTreads {
 
-    private  static final Logger LOGGER = Logger.getLogger(DaemonTreads.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DaemonTreads.class.getName());
 
     public static void main(String[] args) throws InterruptedException {
         HashMap<String, RandomRunner> runnables = new HashMap<>();
