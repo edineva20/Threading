@@ -28,7 +28,6 @@ public class NonBlockingProcessStart {
             Process process = processBuilder.start();
             ProcessReadTask task = new ProcessReadTask(process.getInputStream());
             Future<List<String>> future = pool.submit(task);
-
             // no block, starting another process here
             String[] ls = {"ls", "-l", "/"};
             BlockingProcessStart.main(ls);

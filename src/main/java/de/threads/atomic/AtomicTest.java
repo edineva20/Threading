@@ -75,8 +75,10 @@ public class AtomicTest {
         }
 
         public void run() {
-            for (int i = 0; i < nLoops; i++)
+            for (int i = 0; i < nLoops; i++) {
                 incrVar();
+                Thread.currentThread().yield();
+            }
         }
     }
 }

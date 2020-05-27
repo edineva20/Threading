@@ -85,7 +85,6 @@ class ReentrantWaiter implements  Runnable {
             }
 
             System.out.println(Thread.currentThread().getName().concat(" notifyed at: ".concat(new Date().toString())));
-
             ReentrantLockWaiters.lock.lock();
             try {
                 for (String line : ReentrantLockWaiters.EREIGNIS) {

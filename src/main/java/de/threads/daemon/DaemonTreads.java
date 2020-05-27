@@ -18,7 +18,9 @@ public class DaemonTreads {
             t.setDaemon(true);
             runnables.put(t.getName(), r);
             t.start();
+            // business logic
         }
+
         Thread.sleep(2000);
         // DaemonTreads will exit even with still running threads.
     }
