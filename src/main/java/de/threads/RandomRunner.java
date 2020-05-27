@@ -39,10 +39,12 @@ public class RandomRunner implements Runnable {
                 --maximumLoops;
                 try {
                     Thread.sleep(randomSleep.nextInt(1000));
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
+                    if(e instanceof  InterruptedException ) {
+
+                    }
                     RandomRunner.LOGGER.log(Level.WARNING, "Thread {0} interrupted", Thread.currentThread().getName());
-                    e.printStackTrace();
-                    running = false;
+                    Thread.currentThread().interrupt();
                 }
                 RandomRunner.LOGGER.log(Level.INFO, "{0} still running", Thread.currentThread().getName());
             }

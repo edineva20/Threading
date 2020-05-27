@@ -39,10 +39,11 @@ class Trigger implements  Runnable {
         while(true) {
             try {
                 // en event has occurred
-                Thread.sleep(1000);
+                Thread.sleep(5000);
 
+                SimpleWaiters.EREIGNIS.add(new Date().toString());
                 synchronized (SimpleWaiters.EREIGNIS) {
-                    SimpleWaiters.EREIGNIS.add(new Date().toString());
+                    System.out.println(Thread.currentThread().getName().concat(" notifying at: ".concat(new Date().toString())));
                     SimpleWaiters.EREIGNIS.notifyAll();
                 }
             } catch (InterruptedException e) {
@@ -53,6 +54,18 @@ class Trigger implements  Runnable {
 }
 
 class Waiter implements  Runnable {
+    private synchronized void process1() {
+        try {
+            // en event has occurred
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private synchronized void process2() {
+        process1();
+    }
+
     /**
      * When an object implementing interface <code>Runnable</code> is used
      * to create a thread, starting the thread causes the object's
@@ -69,15 +82,22 @@ class Waiter implements  Runnable {
         while(true) {
             synchronized (SimpleWaiters.EREIGNIS) {
                 try {
+                    System.out.println(Thread.currentThread().getName().concat(" waiting since: ".concat(new Date().toString())));
                     SimpleWaiters.EREIGNIS.wait();
-                    for(String line: SimpleWaiters.EREIGNIS) {
-                        System.out.println(Thread.currentThread().getName().concat(" received : ").concat(line));
-                        System.out.flush();
-                    }
                 } catch (InterruptedException e) {
                     break;
                 }
             }
+
+            System.out.println(Thread.currentThread().getName().concat(" notifyed at: ".concat(new Date().toString())));
+
+            synchronized (SimpleWaiters.EREIGNIS) {
+                for (String line : SimpleWaiters.EREIGNIS) {
+                    System.out.println(Thread.currentThread().getName().concat(" received : ").concat(line));
+                }
+            }
+            process2();
+            System.out.flush();
         }
     }
 }
