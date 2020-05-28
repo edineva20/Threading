@@ -1,6 +1,7 @@
 package de.processes;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -22,25 +23,34 @@ public class NonBlockingProcessStart {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(args);
 
-        try {
-
             LOGGER.log(Level.INFO, "process {0} starting ...", args[0]);
-            Process process = processBuilder.start();
+        Process process = null;
+        Future<List<String>> future = null;
+        try {
+            process = processBuilder.start();
             ProcessReadTask task = new ProcessReadTask(process.getInputStream());
-            Future<List<String>> future = pool.submit(task);
             // no block, starting another process here
-            String[] ls = {"ls", "-l", "/"};
+            String[] ls = {"ls", "-l", "/etc"};
             BlockingProcessStart.main(ls);
 
-            List<String> result = future.get(5, TimeUnit.MINUTES);
+            future = pool.submit(task);
+            //future.cancel(true);
+            List<String> result = future.get(1, TimeUnit.NANOSECONDS);
+
             for (String s : result) {
                 System.out.println(s);
             }
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            pool.shutdown();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.getCause().printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            if(future != null) {
+                future.cancel(true);
+            }
         }
     }
 

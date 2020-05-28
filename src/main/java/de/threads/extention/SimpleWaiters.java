@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class SimpleWaiters {
 
-    private static final Logger LOGGER = Logger.getLogger(SimpleWaiters.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ThreadLocalWaiters.class.getName());
     public static final ArrayList<String> EREIGNIS = new ArrayList<>();
 
     public static void main(String[] args) throws InterruptedException {
@@ -41,10 +41,10 @@ class Trigger implements  Runnable {
                 // en event has occurred
                 Thread.sleep(5000);
 
-                SimpleWaiters.EREIGNIS.add(new Date().toString());
-                synchronized (SimpleWaiters.EREIGNIS) {
+                ThreadLocalWaiters.EREIGNIS.add(new Date().toString());
+                synchronized (ThreadLocalWaiters.EREIGNIS) {
                     System.out.println(Thread.currentThread().getName().concat(" notifying at: ".concat(new Date().toString())));
-                    SimpleWaiters.EREIGNIS.notifyAll();
+                    ThreadLocalWaiters.EREIGNIS.notifyAll();
                 }
             } catch (InterruptedException e) {
                 break;
@@ -80,10 +80,10 @@ class Waiter implements  Runnable {
     @Override
     public void run() {
         while(true) {
-            synchronized (SimpleWaiters.EREIGNIS) {
+            synchronized (ThreadLocalWaiters.EREIGNIS) {
                 try {
                     System.out.println(Thread.currentThread().getName().concat(" waiting since: ".concat(new Date().toString())));
-                    SimpleWaiters.EREIGNIS.wait();
+                    ThreadLocalWaiters.EREIGNIS.wait();
                 } catch (InterruptedException e) {
                     break;
                 }
@@ -91,8 +91,8 @@ class Waiter implements  Runnable {
 
             System.out.println(Thread.currentThread().getName().concat(" notifyed at: ".concat(new Date().toString())));
 
-            synchronized (SimpleWaiters.EREIGNIS) {
-                for (String line : SimpleWaiters.EREIGNIS) {
+            synchronized (ThreadLocalWaiters.EREIGNIS) {
+                for (String line : ThreadLocalWaiters.EREIGNIS) {
                     System.out.println(Thread.currentThread().getName().concat(" received : ").concat(line));
                 }
             }

@@ -55,7 +55,7 @@ class ThreadLocalTrigger implements  Runnable {
 
 class ThreadLocalWaiter implements  Runnable {
 
-    private static ThreadLocal<String> results = new ThreadLocal<>() {
+    private static ThreadLocal<String> results = new ThreadLocal<String>() {
         protected String initialValue() {
             return "";
         }
