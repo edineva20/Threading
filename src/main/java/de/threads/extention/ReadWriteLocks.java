@@ -11,9 +11,11 @@ public class ReadWriteLocks {
     public static void main(String[] args) throws InterruptedException {
 
         for(int i = 0; i < 20; ++i) {
-            new Thread(new ReadWriteLocksReader()).start();
+            Thread t = new Thread(new ReadWriteLocksReader());
+            t.start();
         }
-        new Thread(new ReadWriteLocksWriter()).start();
+        Thread t = new Thread(new ReadWriteLocksWriter());
+        t.start();
     }
 }
 
