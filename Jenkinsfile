@@ -1,93 +1,49 @@
-import de.dhl.jenkins.groovy.*;
-
 pipeline {
 
     tools {
         jdk 'linux_jdk1.8.0_172'
         maven 'linux_M3'
     }
-    agent {
-        any
-    }
+    agent any
 
     stages {
-        stage('parallel compiles') {
-          parallel {
-            stage('SimpleApp') {
-              steps {
-                lock(resource: 'Lock') {
-                  script {
-                      HelloWorld.sayHello();
-                  }
-                  dir(path: 'SimpleApp') {
-                    sh '${MAVEN_HOME}/bin/mvn -s ../maven/settings.xml clean compile'
-                  }
+        stage('Compile/Test/Install') {
+            steps {
+                withMaven(jdk: 'linux_jdk1.8.0_172', maven: 'linux_M3') {
+                    sh 'mvn clean install'
                 }
-              }
             }
-            stage('stateless') {
-              steps {
-                lock(resource: 'Lock') {
-                  dir(path: 'ejb/stateless') {
-                    sh '${MAVEN_HOME}/bin/mvn -s ../../maven/settings.xml clean compile'
-                  }
-                }
-              }
-            }
-            stage('stateful') {
-              steps {
-                lock(resource: 'Lock') {
-                  dir(path: 'ejb/stateful') {
-                    sh '${MAVEN_HOME}/bin/mvn -s ../../maven/settings.xml clean compile'
-                  }
-                }
-              }
-            }
-          stage('jms') {
-              steps {
-                lock(resource: 'Lock') {
-                  dir(path: 'jms') {
-                    sh '${MAVEN_HOME}/bin/mvn -s ../maven/settings.xml clean compile'
-                  }
-                }
-              }
-            }
-          }
         }
 
-    stage('test') {
-      steps {
-        dir(path: 'SimpleApp') {
-          sh '${MAVEN_HOME}/bin/mvn test'
+        stage('Code Analysis') {
+            steps {
+                withMaven(jdk: 'linux_jdk1.8.0_172', maven: 'linux_M3') {
+                    withSonarQubeEnv('jenkins') {
+                        sh 'mvn sonar:sonar'
+                    }
+                }
+            }
         }
-        junit '**/surefire*/*.xml'
-      }
-    }
-    stage('save_check_results') {
-      agent { label 'linux'}
-      steps {
-        archiveArtifacts artifacts: '**/*surefire*/*.xml' , allowEmptyArchive: true
-      }
-    }
 
-    stage('package') {
-      steps {
-        dir(path: 'SimpleApp') {
-          sh '${MAVEN_HOME}/bin/mvn package'
+        stage('Deploy') {
+            steps {
+                withMaven(jdk: 'linux_jdk1.8.0_172', maven: 'linux_M3') {
+                    sh 'echo mvn deploy'
+                }
+            }
         }
-      }
-    }
 
-    stage('upload_artifacts') {
-      steps {
-        archiveArtifacts artifacts: '**/*.jar',  allowEmptyArchive: true
-      }
-    }
+        stage('Archive artifacts') {
+            steps {
+                archiveArtifacts artifacts: '**/*.jar',  allowEmptyArchive: true
+                archiveArtifacts artifacts: 'target/surefire-reports/*.xml',  allowEmptyArchive: true
+            }
+        }
     }
 
     post {
-    failure {
-        echo 'I will always say Hello again!'
-    }
+        failure {
+            echo 'I will always say Hello again!'
+        }
     }
 }
