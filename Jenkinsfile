@@ -15,24 +15,6 @@ pipeline {
             }
         }
 
-        stage('Code Analysis') {
-            steps {
-                withMaven(jdk: 'linux_jdk1.8.0_172', maven: 'linux_M3') {
-                    withSonarQubeEnv('jenkins') {
-                        sh 'mvn sonar:sonar'
-                    }
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                withMaven(jdk: 'linux_jdk1.8.0_172', maven: 'linux_M3') {
-                    sh 'echo mvn deploy'
-                }
-            }
-        }
-
         stage('Archive artifacts') {
             steps {
                 archiveArtifacts artifacts: '**/*.jar',  allowEmptyArchive: true
