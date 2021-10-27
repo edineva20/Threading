@@ -1,6 +1,8 @@
 package de.util;
 
+
 import de.threads.ScaleTester;
+
 
 public class Basic implements ScaleTester {
     int nCols, nRows;
