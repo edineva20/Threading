@@ -1,5 +1,4 @@
 pipeline {
-
     tools {
         jdk 'linux_jdk1.8.0_172'
         maven 'linux_M3'
