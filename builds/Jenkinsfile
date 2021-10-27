@@ -1,16 +1,18 @@
 pipeline {
-    tools {
+   tools {
         jdk 'linux_jdk1.8.0_172'
         maven 'linux_M3'
-    }
-    agent {
+   }
+   agent {
         node {
             label 'unix'
             customWorkspace '/tmp'
         }
-    }
-    
-    stages {
+   }
+
+
+
+   stages {
         stage('Compile/Test/Install') {
             steps {
                 withMaven(jdk: 'linux_jdk1.8.0_172', maven: 'linux_M3') {
@@ -25,11 +27,11 @@ pipeline {
                 archiveArtifacts artifacts: 'target/surefire-reports/*.xml',  allowEmptyArchive: true
             }
         }
-    }
+   }
 
-    post {
+   post {
         failure {
             echo 'I will always say Hello again!'
         }
-    }
+   }
 }
