@@ -1,4 +1,4 @@
 Portal,ConfigName,RemoteDir
-portal1,portal1,/tmp/portal1
-portal2,portal2,/tmp/portal2
-portal3,portal3,/tmp/portal3
+portal1,portal1,portal1
+portal2,portal2,portal2
+portal3,portal3,portal3
