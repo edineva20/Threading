@@ -3,8 +3,13 @@ pipeline {
         jdk 'linux_jdk1.8.0_172'
         maven 'linux_M3'
     }
-    agent any
-
+    agent {
+        node {
+            label 'unix'
+            customWorkspace '/tmp'
+        }
+    }
+    
     stages {
         stage('Compile/Test/Install') {
             steps {
