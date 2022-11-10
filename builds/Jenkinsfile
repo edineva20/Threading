@@ -1,7 +1,5 @@
 pipeline {
-   tools {
-        maven 'Maven 3.3.9'
-   }
+
    agent {
         node {
             label 'unix'
@@ -13,7 +11,7 @@ pipeline {
    stages {
         stage('Compile/Test/Install') {
             steps {
-                withMaven( maven: 'linux_M3') {
+                withMaven( maven: 'Maven 3.3.9') {
                     sh 'mvn clean install'
                 }
             }
