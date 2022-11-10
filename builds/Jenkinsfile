@@ -1,7 +1,6 @@
 pipeline {
    tools {
-        jdk 'linux_jdk1.8.0_172'
-        maven 'linux_M3'
+        maven 'Maven 3.3.9'
    }
    agent {
         node {
@@ -14,7 +13,7 @@ pipeline {
    stages {
         stage('Compile/Test/Install') {
             steps {
-                withMaven(jdk: 'linux_jdk1.8.0_172', maven: 'linux_M3') {
+                withMaven( maven: 'linux_M3') {
                     sh 'mvn clean install'
                 }
             }
