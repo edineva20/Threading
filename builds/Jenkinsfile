@@ -15,13 +15,15 @@ pipeline {
         }
         stage('Source Code Check') {
             steps {
-                echo "sonar scan"
+                withSonarQubeEnv(credentialsId: 'e33b1bc1-7530-4989-b282-d348ac73bc27', installationName: 'sonar') { // You can override the credential to be used
+                    sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
+                }
             }
         }
         stage('Deploy') {
             steps {
                 withMaven(maven: 'Maven 3.8.6') {
-                    sh "mvn deploy"
+                    echo "deploy"
                 }
             }
         }
