@@ -1,33 +1,38 @@
 pipeline {
-
-   agent {
-        node {
-            label 'unix'
-        }
-   }
-
-
-
-   stages {
-        stage('Compile/Test/Install') {
+    agent { label 'Demo' }
+    stages {
+        stage('Compile/Test') {
             steps {
-                withMaven( maven: 'Maven 3.3.9') {
-                    sh 'mvn clean install'
+                withMaven(maven: 'Maven 3.8.6') {
+                    sh "mvn clean install"
                 }
             }
         }
-
-        stage('Archive artifacts') {
+        stage('Report') {
             steps {
-                archiveArtifacts artifacts: '**/*.jar',  allowEmptyArchive: true
-                archiveArtifacts artifacts: 'target/surefire-reports/*.xml',  allowEmptyArchive: true
+                junit allowEmptyResults: true, testResults: '**/*.xml'
+            }
+        }
+        stage('Source Code Check') {
+            steps {
+                echo "sonar scan"
+            }
+        }
+        stage('Deploy') {
+            steps {
+                withMaven(maven: 'Maven 3.8.6') {
+                    sh "mvn deploy"
+                }
             }
         }
    }
-
    post {
-        failure {
-            echo 'I will always say Hello again!'
-        }
+       always {
+           sh 'printenv'
+           emailext body: '', recipientProviders: [developers()], subject: 'Build executed ', to: 'thomas@mosig-frey.de'
+       }
+       success {
+            cleanWs()
+       }
    }
 }
