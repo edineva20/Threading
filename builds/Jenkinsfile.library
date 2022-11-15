@@ -1,3 +1,2 @@
-initPipeline {
-
+mavenPipeline {
 }
